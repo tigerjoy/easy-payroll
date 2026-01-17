@@ -2,30 +2,37 @@
 
 ## Entities
 
-### Household
-The primary organizational unit representing a home or family. It serves as the container for all staff, users, and records.
-
 ### User
-An employer, administrator, or family member who has access to manage the household's staff and records.
+Individual employers or family members who access the platform.
+
+### Household
+The primary container representing a home or employer unit. All staff and management logic are scoped to a household.
+
+### Member
+A join entity that links a User to a Household. It defines the access level (e.g., Admin or Member) for that specific household.
+
+### Invitation
+Tracks pending requests for new users to join a Household via their email address.
 
 ### Employee
-A domestic staff member (e.g., maid, cook, driver) employed by the household. Contains personal details, role, and current employment status.
+Domestic staff members managed within a Household. Stores the `startDate` (when attendance tracking begins) and a running `holidayBalance` to track entitlements vs. usage.
 
-### AttendanceRecord
-A daily record tracking whether an employee was present or absent on a specific date.
+### Attendance Record (Absence)
+Records specific dates when an employee was absent. The system assumes an employee is "present by default" unless an Absence record exists for a date.
 
-### Payment
-A financial transaction involving an employee. This handles all money movements including paying Salaries, giving Advances, awarding Bonuses, and receiving Repayments from employees.
+### Inactivity Period
+Blocks of time (start and end dates) when an employee is completely inactive (e.g., gone home for a few months). No attendance or absence is tracked during these periods.
 
-### HolidayRule
-A rule defining recurring off-days for an employee (e.g., "Every Sunday", "First Monday of month") to automate the expected attendance schedule.
+### Holiday Rule
+Defines the holiday entitlement for an employee. This can be a fixed number of days per month (e.g., 4 days) or a recurrence rule (e.g., "Every Sunday"). Includes a toggle to automatically mark an absence if the employee doesn't show up on a scheduled working day.
+
+### Payroll Item
+Financial entries related to an employee's compensation. This includes Base Salary, Advances, Bonuses, and Penalties. Penalties are calculated when "Absence" exceeds the monthly holiday entitlement and the user chooses to settle the difference financially rather than carrying it forward.
 
 ## Relationships
 
-- Household has many Users
-- Household has many Employees
-- User belongs to a Household
-- Employee belongs to a Household
-- Employee has many AttendanceRecords
-- Employee has many Payments
-- Employee has many HolidayRules
+- **User** can belong to multiple **Households** (via **Member**).
+- **Household** has many **Members**, **Invitations**, and **Employees**.
+- **Employee** belongs to one **Household**.
+- **Employee** has many **Attendance Records**, **Inactivity Periods**, **Holiday Rules**, and **Payroll Items**.
+- **Holiday Rules** and **Attendance Records** update the **Employee's** running `holidayBalance`.
