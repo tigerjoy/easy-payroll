@@ -1,6 +1,6 @@
 import { Suspense, useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Maximize2, GripVertical, Layout, Smartphone, Tablet, Monitor } from 'lucide-react'
+import { ArrowLeft, Maximize2, GripVertical, Layout, Smartphone, Tablet, Monitor, Home, Settings, List, Grid, Users, Calendar, Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { loadScreenDesignComponent, sectionUsesShell } from '@/lib/section-loader'
@@ -10,6 +10,19 @@ import React from 'react'
 
 const MIN_WIDTH = 320
 const DEFAULT_WIDTH_PERCENT = 100
+
+// Helper function to map navigation label to appropriate icon
+function getIconForLabel(label: string): typeof Layout {
+  const lowerLabel = label.toLowerCase()
+  if (lowerLabel.includes('dashboard') || lowerLabel.includes('home')) return Home
+  if (lowerLabel.includes('settings') || lowerLabel.includes('setting')) return Settings
+  if (lowerLabel.includes('staff') || lowerLabel.includes('employee') || lowerLabel.includes('user')) return Users
+  if (lowerLabel.includes('attendance') || lowerLabel.includes('holiday') || lowerLabel.includes('calendar')) return Calendar
+  if (lowerLabel.includes('payroll') || lowerLabel.includes('finance') || lowerLabel.includes('wallet')) return Wallet
+  if (lowerLabel.includes('item') || lowerLabel.includes('list')) return List
+  if (lowerLabel.includes('grid') || lowerLabel.includes('view')) return Grid
+  return Layout // Default icon
+}
 
 export function ScreenDesignPage() {
   const { sectionId, screenDesignName } = useParams<{ sectionId: string; screenDesignName: string }>()
@@ -262,13 +275,14 @@ export function ScreenDesignFullscreen() {
                 return {
                   label,
                   href: `/${label.toLowerCase().replace(/\s+/g, '-')}`,
+                  icon: getIconForLabel(label),
                   isActive: index === 0,
                 }
               })
             : [
-                { label: 'Dashboard', href: '/', isActive: true },
-                { label: 'Items', href: '/items' },
-                { label: 'Settings', href: '/settings' },
+                { label: 'Dashboard', href: '/', icon: Home, isActive: true },
+                { label: 'Items', href: '/items', icon: List },
+                { label: 'Settings', href: '/settings', icon: Settings },
               ]
 
           const defaultUser = {
