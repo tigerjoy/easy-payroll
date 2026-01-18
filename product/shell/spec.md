@@ -10,7 +10,9 @@ HomeStaff uses a sidebar navigation pattern optimized for household workforce ma
 - **Settings & Access** → `/settings`
 
 ### Separate Flows (Not in Main Nav)
-- **Onboarding & Setup** — Displayed for new users before accessing the main app
+- **Landing Page** — Public marketing page at `/`, showcasing product features and call-to-action
+- **User Authentication** — Registration and login flows at `/login` and `/register`, supporting Social Auth and email/password
+- **Onboarding & Setup** — Displayed for new users after first login, before accessing the main app
 - **Employee Portal** — Public-facing page at `/portal`, accessible without authentication
 
 ## User Menu
