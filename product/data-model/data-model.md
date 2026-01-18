@@ -18,7 +18,11 @@ Tracks pending requests for new users to join a Household via their email addres
 The core identity of a domestic staff member — their personal information (name, photo, phone number, address). An employee's profile is independent of any specific household, allowing the same person to work for multiple families.
 
 ### Employment
-A join entity that links an Employee to a Household. This represents the working relationship and contains household-specific data: `startDate` (when attendance tracking begins for this household), running `holidayBalance`, and employment terms. Each Employment has its own attendance, holiday rules, and payroll history.
+A join entity that links an Employee to a Household. This represents the working relationship and contains household-specific data: `startDate` (when the employment began), running `holidayBalance`, and employment terms. Each Employment has its own attendance, holiday rules, and payroll history.
+
+**Employment Type** (household-specific):
+- **Monthly** (default): Regular employees on a fixed salary. Full tracking applies — attendance (present by default), holiday rules, holiday balance, and monthly payroll processing.
+- **Ad-hoc**: Irregular workers not on a monthly salary. No attendance or holiday tracking — only financial records (payments made) are maintained. Ad-hoc employees are excluded from monthly payroll automation.
 
 ### Attendance Record (Absence)
 Records specific dates when an employee was absent from a particular household. Each absence reduces the `holidayBalance` for that Employment. The system assumes an employee is "present by default" unless an Absence record exists for a date. When recording absences, the UI can prompt to apply the same absence across all of the employee's households (useful for sick days or personal leave).

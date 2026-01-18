@@ -43,21 +43,48 @@ export interface Invitation {
 // Employee Management
 // =============================================================================
 
+/**
+ * Employee represents a domestic staff member's core identity.
+ * The profile information is shared across households.
+ */
 export interface Employee {
   id: string
-  householdId: string
   name: string
   photo: string | null
-  status: 'active' | 'archived'
-  startDate: string
-  holidayBalance: number
   phoneNumbers: PhoneNumber[]
   addresses: Address[]
-  employmentHistory: EmploymentRecord[]
-  salaryHistory: SalaryRecord[]
   documents: Document[]
   customProperties: CustomProperty[]
   notes: Note[]
+  createdAt: string
+  updatedAt: string
+}
+
+export type EmploymentType = 'monthly' | 'adhoc'
+export type EmploymentStatus = 'active' | 'archived'
+
+/**
+ * Employment represents the working relationship between an Employee and a Household.
+ * Contains household-specific data like employment type, salary, and holiday balance.
+ *
+ * Employment Types:
+ * - 'monthly': Regular employees on a fixed salary with full attendance/holiday tracking
+ * - 'adhoc': Irregular workers with only payment records (no attendance/holiday tracking)
+ */
+export interface Employment {
+  id: string
+  employeeId: string
+  householdId: string
+  employmentType: EmploymentType
+  role: string
+  startDate: string
+  endDate?: string
+  status: EmploymentStatus
+  /** Running holiday balance (null for adhoc employees) */
+  holidayBalance: number | null
+  /** Current salary amount (null for adhoc employees) */
+  currentSalary: number | null
+  paymentMethod: 'Cash' | 'Bank Transfer' | 'UPI' | 'Cheque'
   createdAt: string
   updatedAt: string
 }
@@ -106,23 +133,28 @@ export interface Note {
 // Attendance & Holidays
 // =============================================================================
 
-export type LeaveType = 'sick' | 'casual' | 'paid' | 'unpaid' | 'other'
-
+/**
+ * Attendance records are linked to Employment (not Employee) since attendance
+ * is tracked per-household. Only Monthly employments have attendance tracking.
+ */
 export interface AttendanceRecord {
   id: string
-  employeeId: string
+  employmentId: string
   date: string
-  type: LeaveType
-  notes?: string
+  reason?: string
+  /** Whether this absence was also applied to other households */
+  appliedToOtherHouseholds: boolean
   createdAt: string
 }
 
 export interface InactivityPeriod {
   id: string
-  employeeId: string
+  employmentId: string
   startDate: string
   endDate?: string
   reason?: string
+  /** Whether this inactivity was also applied to other households */
+  appliedToOtherHouseholds: boolean
   createdAt: string
 }
 
@@ -130,10 +162,13 @@ export type HolidayRuleType = 'fixed' | 'recurring'
 
 export interface HolidayRule {
   id: string
-  employeeId: string
+  employmentId: string
   type: HolidayRuleType
-  monthlyAllowance?: number
-  weeklyOffDays?: number[]
+  /** For 'fixed' type: number of days credited per month */
+  monthlyAllowance: number | null
+  /** For 'recurring' type: days of week that are off (0=Sunday, 6=Saturday) */
+  weeklyOffDays: number[]
+  /** Automatically record absences on scheduled off-days when employee works */
   autoMarkAbsence: boolean
   createdAt: string
 }
@@ -143,18 +178,22 @@ export interface PublicHoliday {
   householdId: string
   date: string
   name: string
-  type: 'public' | 'festival' | 'other'
 }
 
 // =============================================================================
 // Payroll & Finance
 // =============================================================================
 
-export type PayrollItemType = 'Salary' | 'Advance' | 'Bonus' | 'Penalty' | 'Encashment'
+/**
+ * Payroll items are linked to Employment (not Employee) since payroll
+ * is tracked per-household. Each household maintains independent salary
+ * and payment history.
+ */
+export type PayrollItemType = 'Salary' | 'Advance' | 'Bonus' | 'Penalty' | 'Encashment' | 'AdhocPayment'
 
 export interface PayrollItem {
   id: string
-  employeeId: string
+  employmentId: string
   date: string
   type: PayrollItemType
   amount: number
@@ -174,10 +213,12 @@ export interface PaymentReceipt {
 
 export interface Advance {
   id: string
-  employeeId: string
+  employmentId: string
   amount: number
   date: string
   repaidAmount: number
+  monthlyDeduction: number
+  reason?: string
   status: 'active' | 'repaid' | 'cancelled'
   createdAt: string
 }

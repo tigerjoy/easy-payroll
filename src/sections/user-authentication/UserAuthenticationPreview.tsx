@@ -1,16 +1,25 @@
 import data from '@/../product/sections/user-authentication/data.json'
+import type {
+  AuthConfig,
+  SocialProvider,
+  LoginForm,
+  RegisterForm,
+  VerificationForm,
+  ForgotPasswordForm,
+  ErrorMessages
+} from '@/../product/sections/user-authentication/types'
 import { UserAuthentication } from './components/UserAuthentication'
 
 export default function UserAuthenticationPreview() {
   return (
     <UserAuthentication
-      authConfig={data.authConfig}
-      socialProviders={data.socialProviders}
-      loginForm={data.loginForm}
-      registerForm={data.registerForm}
-      verificationForm={data.verificationForm}
-      forgotPasswordForm={data.forgotPasswordForm}
-      errorMessages={data.errorMessages}
+      authConfig={data.authConfig as AuthConfig}
+      socialProviders={data.socialProviders as SocialProvider[]}
+      loginForm={data.loginForm as LoginForm}
+      registerForm={data.registerForm as RegisterForm}
+      verificationForm={data.verificationForm as VerificationForm}
+      forgotPasswordForm={data.forgotPasswordForm as ForgotPasswordForm}
+      errorMessages={data.errorMessages as ErrorMessages}
       currentView="login"
       onLogin={(email, password) => console.log('Login:', email, password)}
       onRegister={(name, email, password) => console.log('Register:', name, email, password)}

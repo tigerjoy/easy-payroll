@@ -108,8 +108,8 @@ export function HolidayRuleModal({
 }: HolidayRuleModalProps) {
   // Derive initial state from existing rules
   const existingWeeklyOffs = existingRules
-    .filter(r => r.employeeId === employee.id && r.type === 'weekly_off')
-    .map(r => r.dayOfWeek)
+    .filter(r => r.employmentId === employee.id && r.type === 'recurring')
+    .flatMap(r => r.weeklyOffDays)
 
   const [ruleType, setRuleType] = useState<HolidayRuleType>(
     existingWeeklyOffs.length > 0 ? 'recurring' : 'fixed'
@@ -151,7 +151,7 @@ export function HolidayRuleModal({
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white dark:border-stone-800 shadow-md">
                 <img
-                  src={employee.avatar}
+                  src={employee.avatar || undefined}
                   alt={employee.name}
                   className="w-full h-full object-cover"
                 />

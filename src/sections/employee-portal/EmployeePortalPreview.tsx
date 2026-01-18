@@ -1,5 +1,12 @@
 import { useState } from 'react'
 import data from '@/../product/sections/employee-portal/data.json'
+import type {
+  Employee,
+  EmploymentSummary,
+  ActivityItem,
+  AttendanceSummary,
+  MonthlyPaymentSummary
+} from '@/../product/sections/employee-portal/types'
 import { EmployeePortal } from './components/EmployeePortal'
 
 export default function EmployeePortalPreview() {
@@ -29,9 +36,13 @@ export default function EmployeePortalPreview() {
 
   return (
     <EmployeePortal
-      staff={isLoggedIn ? data.staff : undefined}
-      summary={isLoggedIn ? data.summary : undefined}
-      activity={data.activity}
+      employee={isLoggedIn ? (data.employee as Employee) : undefined}
+      employments={isLoggedIn ? (data.employments as EmploymentSummary[]) : []}
+      selectedEmploymentId={isLoggedIn ? data.selectedEmploymentId as string : undefined}
+      selectedEmploymentDetails={isLoggedIn ? data.selectedEmploymentDetails as any : undefined}
+      attendanceSummary={isLoggedIn ? (data.attendanceSummary as AttendanceSummary) : undefined}
+      paymentSummary={isLoggedIn ? (data.paymentSummary as MonthlyPaymentSummary) : undefined}
+      activity={data.activity as ActivityItem[]}
       isAuthenticating={isAuthenticating}
       loginError={loginError}
       onLogin={handleLogin}

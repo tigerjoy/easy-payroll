@@ -209,7 +209,7 @@ export function InactivityModal({
               <div className="relative">
                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white dark:border-stone-800 shadow-md">
                   <img
-                    src={employee.avatar}
+                    src={employee.avatar || undefined}
                     alt={employee.name}
                     className={`w-full h-full object-cover ${isCurrentlyInactive ? 'grayscale' : ''}`}
                   />

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import type {
   SettingsAndAccessProps,
-  UserProfile,
   Household,
   Member,
   Invitation,

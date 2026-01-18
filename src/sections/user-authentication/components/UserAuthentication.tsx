@@ -14,7 +14,6 @@ export function UserAuthentication({
   registerForm,
   verificationForm,
   forgotPasswordForm,
-  errorMessages,
   currentView: initialView = 'login',
   verificationEmail = '',
   isLoading = false,

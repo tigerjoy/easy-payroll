@@ -1,41 +1,91 @@
 import { useState } from 'react'
 import data from '@/../product/sections/attendance-and-holidays/data.json'
 import { AttendanceDashboard } from './components/AttendanceDashboard'
-import type { LeaveRecord, Holiday } from '@/../product/sections/attendance-and-holidays/types'
+import type {
+  AttendanceEmployment,
+  AbsenceRecord,
+  InactivityPeriod,
+  HolidayRule,
+  PublicHoliday,
+} from '@/../product/sections/attendance-and-holidays/types'
 
 export default function AttendanceDashboardPreview() {
-  const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0])
-  const [leaves, setLeaves] = useState<LeaveRecord[]>(data.leaveRecords as LeaveRecord[])
-  const [holidays, setHolidays] = useState<Holiday[]>(data.holidays as Holiday[])
+  const [currentDate, setCurrentDate] = useState(
+    data.selectedDate || new Date().toISOString().split('T')[0]
+  )
+  const [absenceRecords, setAbsenceRecords] = useState<AbsenceRecord[]>(
+    data.absenceRecords as AbsenceRecord[]
+  )
+  const [inactivityPeriods, setInactivityPeriods] = useState<InactivityPeriod[]>(
+    data.inactivityPeriods as InactivityPeriod[]
+  )
+  const [publicHolidays, setPublicHolidays] = useState<PublicHoliday[]>(
+    data.publicHolidays as PublicHoliday[]
+  )
 
   return (
     <AttendanceDashboard
-      employees={data.employees as any[]}
-      leaveRecords={leaves}
-      holidays={holidays}
-      holidayRules={data.holidayRules as any[]}
+      employments={data.employments as AttendanceEmployment[]}
+      absenceRecords={absenceRecords}
+      inactivityPeriods={inactivityPeriods}
+      holidayRules={data.holidayRules as HolidayRule[]}
+      publicHolidays={publicHolidays}
       selectedDate={currentDate}
       onDateChange={setCurrentDate}
-      onAddLeaveRecord={(record) => {
-        console.log('Add leave:', record)
-        const newRecord = { ...record, id: `lv-${Date.now()}` }
-        setLeaves([...leaves, newRecord])
+      onAddAbsence={(employmentId, date, reason, applyToOtherHouseholds) => {
+        console.log('Add absence:', { employmentId, date, reason, applyToOtherHouseholds })
+        const newRecord: AbsenceRecord = {
+          id: `abs-${Date.now()}`,
+          employmentId,
+          date,
+          reason,
+          appliedToOtherHouseholds: applyToOtherHouseholds || false,
+        }
+        setAbsenceRecords([...absenceRecords, newRecord])
       }}
-      onUpdateLeaveRecord={(id, updates) => {
-        console.log('Update leave:', id, updates)
-        setLeaves(leaves.map(l => l.id === id ? { ...l, ...updates } : l))
+      onUpdateAbsence={(absenceId, updates) => {
+        console.log('Update absence:', absenceId, updates)
+        setAbsenceRecords(
+          absenceRecords.map((a) => (a.id === absenceId ? { ...a, ...updates } : a))
+        )
       }}
-      onRemoveLeaveRecord={(id) => {
-        console.log('Remove leave:', id)
-        setLeaves(leaves.filter(l => l.id !== id))
+      onRemoveAbsence={(absenceId) => {
+        console.log('Remove absence:', absenceId)
+        setAbsenceRecords(absenceRecords.filter((a) => a.id !== absenceId))
       }}
-      onAddHoliday={(holiday) => {
-        console.log('Add holiday:', holiday)
-        setHolidays([...holidays, { ...holiday, id: `hol-${Date.now()}` }])
+      onMarkInactive={(employmentId, startDate, reason, applyToOtherHouseholds) => {
+        console.log('Mark inactive:', { employmentId, startDate, reason, applyToOtherHouseholds })
+        const newPeriod: InactivityPeriod = {
+          id: `inact-${Date.now()}`,
+          employmentId,
+          startDate,
+          reason,
+          appliedToOtherHouseholds: applyToOtherHouseholds || false,
+        }
+        setInactivityPeriods([...inactivityPeriods, newPeriod])
       }}
-      onRemoveHoliday={(id) => {
-        console.log('Remove holiday:', id)
-        setHolidays(holidays.filter(h => h.id !== id))
+      onMarkActive={(employmentId, endDate) => {
+        console.log('Mark active:', { employmentId, endDate })
+        setInactivityPeriods(
+          inactivityPeriods.map((ip) =>
+            ip.employmentId === employmentId && !ip.endDate
+              ? { ...ip, endDate }
+              : ip
+          )
+        )
+      }}
+      onAddPublicHoliday={(date, name) => {
+        console.log('Add public holiday:', { date, name })
+        const newHoliday: PublicHoliday = {
+          id: `hol-${Date.now()}`,
+          date,
+          name,
+        }
+        setPublicHolidays([...publicHolidays, newHoliday])
+      }}
+      onRemovePublicHoliday={(holidayId) => {
+        console.log('Remove public holiday:', holidayId)
+        setPublicHolidays(publicHolidays.filter((h) => h.id !== holidayId))
       }}
     />
   )

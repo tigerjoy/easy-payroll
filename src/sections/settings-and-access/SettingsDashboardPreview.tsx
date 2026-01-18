@@ -1,14 +1,21 @@
 import data from '@/../product/sections/settings-and-access/data.json'
+import type {
+  UserProfile,
+  Household,
+  Member,
+  Invitation,
+  PermissionsMap
+} from '@/../product/sections/settings-and-access/types'
 import { SettingsDashboard } from './components/SettingsDashboard'
 
 export default function SettingsDashboardPreview() {
   return (
     <SettingsDashboard
-      userProfile={data.userProfile}
-      households={data.households}
-      members={data.members}
-      invitations={data.invitations}
-      permissions={data.permissions}
+      userProfile={data.userProfile as UserProfile}
+      households={data.households as Household[]}
+      members={data.members as Member[]}
+      invitations={data.invitations as Invitation[]}
+      permissions={data.permissions as PermissionsMap}
       onUpdateProfile={(updates) => console.log('Update profile:', updates)}
       onSwitchHousehold={(id) => console.log('Switch household:', id)}
       onCreateHousehold={(name) => console.log('Create household:', name)}

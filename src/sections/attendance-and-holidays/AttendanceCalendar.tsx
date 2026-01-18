@@ -1,19 +1,27 @@
 import data from '@/../product/sections/attendance-and-holidays/data.json'
+import type {
+  AttendanceEmployment,
+  AbsenceRecord,
+  InactivityPeriod,
+  HolidayRule,
+  PublicHoliday
+} from '@/../product/sections/attendance-and-holidays/types'
 import { AttendanceCalendar } from './components/AttendanceCalendar'
-import type { LeaveRecord, Holiday } from '@/../product/sections/attendance-and-holidays/types'
 
 export default function AttendanceCalendarPreview() {
   return (
     <AttendanceCalendar
-      employees={data.employees as any}
-      leaveRecords={data.leaveRecords as LeaveRecord[]}
-      holidays={data.holidays as Holiday[]}
-      holidayRules={data.holidayRules as any}
-      onAddLeaveRecord={(record) => console.log('Add leave record:', record)}
-      onUpdateLeaveRecord={(id, updates) => console.log('Update leave record:', id, updates)}
-      onRemoveLeaveRecord={(id) => console.log('Remove leave record:', id)}
-      onAddHoliday={(holiday) => console.log('Add holiday:', holiday)}
-      onRemoveHoliday={(id) => console.log('Remove holiday:', id)}
+      employments={data.employments as AttendanceEmployment[]}
+      absenceRecords={data.absenceRecords as AbsenceRecord[]}
+      inactivityPeriods={data.inactivityPeriods as InactivityPeriod[]}
+      holidayRules={data.holidayRules as HolidayRule[]}
+      publicHolidays={data.publicHolidays as PublicHoliday[]}
+      selectedDate={data.selectedDate as string | undefined}
+      onAddAbsence={(employmentId, date, reason) => console.log('Add absence:', { employmentId, date, reason })}
+      onUpdateAbsence={(id, updates) => console.log('Update absence:', id, updates)}
+      onRemoveAbsence={(id) => console.log('Remove absence:', id)}
+      onAddPublicHoliday={(date, name) => console.log('Add public holiday:', { date, name })}
+      onRemovePublicHoliday={(id) => console.log('Remove public holiday:', id)}
       onDateChange={(date) => console.log('Date changed:', date)}
     />
   )

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import data from '@/../product/sections/attendance-and-holidays/data.json'
 import { HolidayRuleModal } from './components/HolidayRuleModal'
-import type { Employee, HolidayRule, HolidayRuleConfig } from '@/../product/sections/attendance-and-holidays/types'
+import type { Employee, HolidayRule } from '@/../product/sections/attendance-and-holidays/types'
+import type { HolidayRuleConfig } from './components/HolidayRuleModal'
 
 export default function HolidayRuleModalPreview() {
   const [isOpen, setIsOpen] = useState(true)
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(data.employees[0] as Employee)
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(data.employments[0] as Employee)
 
   const handleSave = (config: HolidayRuleConfig) => {
     console.log('Save holiday rules for', selectedEmployee.name, ':', config)
@@ -30,12 +31,12 @@ export default function HolidayRuleModalPreview() {
             <select
               value={selectedEmployee.id}
               onChange={(e) => {
-                const emp = data.employees.find(emp => emp.id === e.target.value) as Employee
+                const emp = data.employments.find(emp => emp.id === e.target.value) as Employee
                 if (emp) setSelectedEmployee(emp)
               }}
               className="w-full px-3 py-2 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-stone-800 dark:text-stone-200"
             >
-              {data.employees.map(emp => (
+              {data.employments.map(emp => (
                 <option key={emp.id} value={emp.id}>{emp.name} - {emp.role}</option>
               ))}
             </select>

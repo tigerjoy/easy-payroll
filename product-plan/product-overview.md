@@ -50,17 +50,23 @@ A "User > Household" hierarchy enables multiple family members or stakeholders t
 - Household — The primary container representing a home or employer unit
 - Member — Join entity linking a User to a Household with access level
 - Invitation — Pending requests for new users to join a Household
-- Employee — Domestic staff members managed within a Household
+- Employee — Domestic staff member's core identity (shared across households)
+- Employment — Links Employee to Household with household-specific data
 - Attendance Record (Absence) — Records specific dates when an employee was absent
 - Inactivity Period — Blocks of time when an employee is completely inactive
-- Holiday Rule — Defines the holiday entitlement for an employee
-- Payroll Item — Financial entries related to an employee's compensation
+- Holiday Rule — Defines the holiday entitlement for an Employment
+- Payroll Item — Financial entries related to an Employment's compensation
 
 **Key Relationships:**
 - User can belong to multiple Households (via Member)
-- Household has many Members, Invitations, and Employees
-- Employee belongs to one Household
-- Employee has many Attendance Records, Inactivity Periods, Holiday Rules, and Payroll Items
+- Household has many Members, Invitations, and Employments
+- Employee can work for multiple Households (via Employment)
+- Employment belongs to one Employee and one Household
+- Employment has many Attendance Records, Inactivity Periods, Holiday Rules, and Payroll Items
+
+**Employment Types:**
+- Monthly — Regular employees with attendance/holiday tracking
+- Ad-hoc — Irregular workers with only payment records (no attendance/holiday tracking)
 
 ## Design System
 

@@ -7,7 +7,7 @@ export default function InactivityModalPreview() {
   const [isOpen, setIsOpen] = useState(true)
 
   // Create a mix of active and inactive employees for demo
-  const employees: Employee[] = data.employees.map((emp, i) => ({
+  const employees: Employee[] = data.employments.map((emp, i) => ({
     ...emp,
     status: i === 1 ? 'inactive' : 'active', // Make second employee inactive for demo
   })) as Employee[]
@@ -56,7 +56,7 @@ export default function InactivityModalPreview() {
 
           <div className="flex items-center gap-3 p-4 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800">
             <img
-              src={selectedEmployee.avatar}
+              src={selectedEmployee.avatar || undefined}
               alt={selectedEmployee.name}
               className={`w-12 h-12 rounded-full object-cover ${selectedEmployee.status === 'inactive' ? 'grayscale' : ''}`}
             />
